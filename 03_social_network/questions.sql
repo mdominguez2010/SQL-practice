@@ -15,9 +15,9 @@
 
 --3. List all rows from the follows table, replacing both user_ids with first name.
 --Hint: it may help to make this a VIEW
---  user_id | follows |    date_created      user_id | first_name | last_name |   house 
--- ---------+---------+------------------------------+------------+-----------+------------
---        1 |       2 | 1993-09-01 00:00:00         1 | Harry      | Potter    | Gryffindor
+--  user_id | follows |    date_created      user_id | first_name | last_name |   house     user_id | first_name | last_name |   house 
+-- ---------+---------+------------------------------+------------+-----------+---------------------+------------+-----------+------------
+--        1 |       2 | 1993-09-01 00:00:00         1 | Harry      | Potter    | Gryffindor       2 | Ron        | Wesley    | Gryffindor
 --        2 |       1 | 1989-01-01 00:00:00         2 | Ron        | Wesley    | Gryffindor
 --        3 |       1 | 1993-07-01 00:00:00
 --        2 |       3 | 1994-10-10 00:00:00
@@ -39,8 +39,8 @@
 --        4 |       9 | 1996-05-30 00:00:00
 
 -- SELECT
---     s.first_name,
---     s1.first_name,
+--     s.first_name AS user_first,
+--     s1.first_name AS follow_first,
 --     f.date_created
 -- FROM
 --     users s
@@ -51,3 +51,37 @@
 
 -- 4. List all the following links established before September 1st 1993,
 -- but this time use the users first names.
+
+-- SELECT
+--     s.first_name AS user_first,
+--     s1.first_name AS follow_first,
+--     f.date_created
+-- FROM
+--     users s
+--         INNER JOIN follows f
+--             ON s.user_id = f.user_id
+--         INNER JOIN users s1
+--             ON s1.user_id = f.follows
+-- WHERE DATE(f.date_created) < '1993-09-01';
+
+-- 5. Give a count of how many people followed each user as of 1999-12-31.
+-- Give the result in term of "users full name, number of followers".
+
+SELECT
+    CONCAT(s.first_name, ' ', s.last_name) AS user_followed_name,
+    COUNT(s1.first_name)
+    -- s1.first_name AS follow_first,
+    -- f.date_created
+    -- s.*,
+    -- f.*,
+    -- s1.*
+FROM
+    users s
+        INNER JOIN follows f
+            ON s.user_id = f.user_id
+        INNER JOIN users s1
+            ON s1.user_id = f.follows
+WHERE DATE(f.date_created) <= '1999-12-31'
+GROUP BY CONCAT(s.first_name, ' ', s.last_name);
+
+UNSURE ABOUT THIS ONE. I'LL COME BACK TO IT!
