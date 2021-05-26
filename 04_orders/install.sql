@@ -27,7 +27,6 @@ CREATE TABLE order_product(
   qty INTEGER
 );
 
-
 \copy customer FROM 'customers.csv' WITH DELIMITER ',' CSV HEADER;
 \copy product FROM 'products.csv' WITH DELIMITER ',' CSV;
 \copy customer_order FROM 'orders.csv' WITH DELIMITER ',' CSV HEADER;
