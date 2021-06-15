@@ -93,22 +93,54 @@
 -- 7. Find the 10 customers that spent the most in 2017. Give the name and amount spent.
 -- Take the date to be the order date (not the delivery date)
 
-SELECT
-    c.customer_id AS customer_id,
-    c.name AS cust_name,
-    EXTRACT(YEAR FROM co.date_ordered) AS year_ordered,
-    SUM(p.price * op.qty) AS order_amount_spent
-FROM customer c
-INNER JOIN customer_order co
-    ON c.customer_id = co.customer_id
-INNER JOIN order_product op
-    ON co.order_id = op.order_id
-INNER JOIN product p
-    ON op.product_id = p.product_id
-WHERE EXTRACT(YEAR FROM co.date_ordered) = 2017
-GROUP BY
-    c.customer_id,
-    c.name,
-    EXTRACT(YEAR FROM co.date_ordered)
-ORDER BY order_amount_spent DESC
-LIMIT 10;
+-- SELECT
+--     c.customer_id AS customer_id,
+--     c.name AS cust_name,
+--     EXTRACT(YEAR FROM co.date_ordered) AS year_ordered,
+--     SUM(p.price * op.qty) AS order_amount_spent
+-- FROM customer c
+-- INNER JOIN customer_order co
+--     ON c.customer_id = co.customer_id
+-- INNER JOIN order_product op
+--     ON co.order_id = op.order_id
+-- INNER JOIN product p
+--     ON op.product_id = p.product_id
+-- WHERE EXTRACT(YEAR FROM co.date_ordered) = 2017
+-- GROUP BY
+--     c.customer_id,
+--     c.name,
+--     EXTRACT(YEAR FROM co.date_ordered)
+-- ORDER BY order_amount_spent DESC
+-- LIMIT 10;
+
+-- 8. Which three products have we sold the most of? i.e. the greatest number of units?
+
+-- SELECT
+--     p.product_id,
+--     p.product_name,
+--     sum(op.qty) as num_sold
+-- FROM customer c INNER JOIN customer_order co
+--     ON c.customer_id = co.customer_id
+-- INNER JOIN order_product op
+--     ON co.order_id = op.order_id
+-- INNER JOIN product p
+--     ON op.product_id = p.product_id
+-- GROUP BY
+--     p.product_id
+-- ORDER BY num_sold DESC
+-- LIMIT 3;
+
+-- 9. What is the average number of days between order and delivery?
+
+-- select avg(date_delivered - date_ordered) as avg_time_to_delivery
+-- from customer_order;
+
+-- 10. What is the average number of days between order and delivery for each year?
+-- Take the year from the order date.
+
+select
+    EXTRACT(year from date_ordered) as year,
+    avg(date_delivered - date_ordered) as avg_time_to_delivery
+from customer_order
+group by 1
+order by 1 DESC;
